@@ -6,14 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Animated,
-  Keyboard,
-  TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
 } from "react-native";
+import { createTag } from "../store/reducers/tags"
+import SelectIcons from "./SelectIcons";
 
-import { fetchTags } from "../store/reducers/tags";
-import {createTag} from "../store/reducers/tags";
 
 class HostHomePage extends Component {
   constructor(props) {
@@ -26,9 +23,7 @@ class HostHomePage extends Component {
     };
     this.onPress = this.onPress.bind(this)
   }
-  componentDidMount() {
-    this.props.getTags();
-  }
+
   async onPress() {
     const tag = {
       title: this.state.tagTitle,
@@ -42,12 +37,12 @@ class HostHomePage extends Component {
   }
   render() {
     const host = this.props.user.host;
-    const tags = this.props.tag;
+    const props = this.props
     return (
+
       <ScrollView>
         <View style={localStyles.hostContainer}>
-          <View style={{ height: "10%" }}>
-
+          <View style={{ height: "14%" }}>
             <TouchableOpacity
               onPress={this.props.backHome}
               style={localStyles.backHomeButton}
@@ -77,69 +72,56 @@ class HostHomePage extends Component {
                 <Text style={localStyles.infoText}>{host.email}</Text>
               </View>
             </View>
-          </View>
+            <View style={localStyles.hostKeyContainer}>
+              <Text style={localStyles.infoTitle}>Select Tag</Text>
 
-          <View style={localStyles.hostKeyContainer}>
-            <Text style={localStyles.infoTitle}>Select Icon</Text>
-
+              <SelectIcons />
+              <TextInput
+                placeholder="Tag Title"
+                placeholderTextColor={"gray"}
+                style={localStyles.hostKeyInput}
+                onChangeText={(text) =>
+                  this.setState({
+                    tagTitle: text,
+                  })
+                }
+              />
+              <TextInput
+                placeholder="Host Message"
+                placeholderTextColor={"gray"}
+                style={localStyles.hostKeyInput}
+                onChangeText={(text) =>
+                  this.setState({
+                    tagMessage: text,
+                  })
+                }
+              />
+            </View>
+            <TouchableOpacity
+              onPress={this.props.hostAR}
+              style={localStyles.arButton}
+            >
+              <Text style={localStyles.arButtonText}>Upload</Text>
+            </TouchableOpacity>
             <View>
               <Text>{JSON.stringify(this.props.tag)}</Text>
             </View>
-
-            <TextInput
-              placeholder="Tag Title"
-              placeholderTextColor={"gray"}
-              style={localStyles.hostKeyInput}
-              onChangeText={(text) =>
-                this.setState({
-                  tagTitle: text,
-                })
-              }
-            />
-            <TextInput
-              placeholder="Host Message"
-              placeholderTextColor={"gray"}
-              style={localStyles.hostKeyInput}
-              onChangeText={(text) =>
-                this.setState({
-                  tagMessage: text,
-                })
-              }
-            />
-            <TextInput
-              placeholder="Host Location ID"
-              placeholderTextColor={"gray"}
-              style={localStyles.hostKeyInput}
-              onChangeText={(text) =>
-                this.setState({
-                  hostKey: text,
-                })
-              }
-            />
-            <TouchableOpacity
-              onPress={this.onPress}
-              style={localStyles.arButton}
-            >
-              <Text style={localStyles.arButtonText}>Upload!</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-    );
 
+    )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    tag: state.tag
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
-    getTags: () => dispatch(fetchTags()),
     createATag: (tag) => dispatch(createTag(tag))
   }
 }
@@ -148,12 +130,10 @@ const localStyles = StyleSheet.create({
   hostContainer: {
     backgroundColor: "white",
     flex: 1,
-    height: "auto"
   },
   bellowBack: {
     alignItems: "center",
-    height: "20%",
-    marginBottom: 20
+    height: "86%",
   },
   titleText: {
     paddingBottom: 30,
@@ -161,6 +141,7 @@ const localStyles = StyleSheet.create({
     textAlign: "center",
     fontSize: 30,
     fontWeight: "bold",
+    paddingTop: 30,
   },
   backHomeButton: {
     width: "30%",
@@ -220,9 +201,6 @@ const localStyles = StyleSheet.create({
   hostKeyContainer: {
     padding: 20,
     width: "90%",
-    height: "70%",
-    marginTop: 40,
-    marginLeft: 20,
   },
   hostKeyInput: {
     width: "100%",
