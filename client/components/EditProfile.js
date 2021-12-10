@@ -48,7 +48,7 @@ class SignUp extends React.Component {
     return (
       <View style={localStyles.signupContainer} >
         <TouchableOpacity onPress={this.props.guestPage} style={localStyles.backHomeButton} >
-          <Text style={localStyles.backButtonText} onPress={this.props.backHome} >{'< Cancel'}</Text>
+          <Text style={localStyles.backButtonText} onPress={this.props.backHome} >{'X'}</Text>
         </TouchableOpacity>
         <Text onPress={() => Keyboard.dismiss()} style={localStyles.titleText} >Update Profile</Text>
         <View style={localStyles.inputContainer} >
